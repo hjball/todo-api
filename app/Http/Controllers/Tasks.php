@@ -7,6 +7,7 @@ use App\Task;
 use Illuminate\Http\Request;
 use App\Http\Resources\TaskResource;
 use App\Http\Resources\TaskListResource;
+use App\Http\Requests\TaskRequest;
 
 
 class Tasks extends Controller
@@ -27,7 +28,7 @@ class Tasks extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TaskRequest $request)
     {
         $data = $request->only(["task"]);
         $task = Task::create($data);
@@ -52,9 +53,12 @@ class Tasks extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TaskRequest $request, Task $task)
     {
-        //
+        $data = $request->only(["task"]);
+        $task->fill($data)->save();
+
+        return new TaskResource($task);
     }
 
     /**
@@ -63,13 +67,17 @@ class Tasks extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Task $task)
     {
-        //
+        $task->delete();
+        return response(null, 204);
     }
 
-    public function completed($id)
+    public function completed(Request $request, Task $task)
     {
-        //
+        $task->completed = 1;
+        $task->save();
+
+        return new TaskResource($task);
     }
 }

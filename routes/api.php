@@ -15,7 +15,7 @@ $router->group(["prefix" => "tasks"], function ($router) {
 	$router->post("", "Tasks@store");
 	$router->get("", "Tasks@index");
 	$router->put("{task}", "Tasks@update");
-	$router->delete("{task}", "Tasks@update");
+	$router->delete("{task}", "Tasks@destroy");
 	$router->patch("{task}/completed", "Tasks@completed");
 });
 
