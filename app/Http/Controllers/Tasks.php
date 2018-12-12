@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Task;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\TaskResource;
+use App\Http\Resources\TaskListResource;
+
 
 class Tasks extends Controller
 {
@@ -13,9 +16,9 @@ class Tasks extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Task $task)
     {
-        
+        return TaskListResource::collection(Task::all());
     }
 
     /**
@@ -28,7 +31,7 @@ class Tasks extends Controller
     {
         $data = $request->only(["task"]);
         $task = Task::create($data);
-        return response($task, 201);
+        return new TaskResource($task);
     }
 
     /**
